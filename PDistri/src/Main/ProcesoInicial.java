@@ -38,16 +38,20 @@ public class ProcesoInicial {
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ProcesoInicial window = new ProcesoInicial();
-					window.frame.setVisible(true);
-					initialize();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+                    @Override
+                    public void run() {
+                        try {
+                            ProcesoInicial window = new ProcesoInicial();
+                            System.out.println("entre");
+                            //ProcesoInicial.frame.setVisible(true);
+                            System.out.println("entre2");
+                            initialize();
+                        } catch (Exception e) {
+                            System.out.println("no entre");
+                            e.printStackTrace();
+                        }
+                    }
+                });
 	}
 	
 	public static void Invocacion(final int id){
