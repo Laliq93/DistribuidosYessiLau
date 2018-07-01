@@ -7,54 +7,41 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.net.*;
+import java.util.logging.*;
+import servidorMain.ServidorHiloServer;
 /**
  * @author Macdelali
  */
 public class Servidor {
 
-    /**
-     * Puerto 
-     */
-    private final static int PORT = 5000;
-    
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        
+ 
+         ServerSocket ss;
+        System.out.print("Inicializando servidor... ");
         try {
-            //Socket de servidor para esperar peticiones de la red
-            ServerSocket serverSocket = new ServerSocket(PORT);
-            System.out.println("Servidor> Servidor iniciado");    
-            System.out.println("Servidor> En espera de cliente...");    
-            //Socket de cliente
-            Socket clientSocket;
-            while(true){
-                //en espera de conexion, si existe la acepta
-                clientSocket = serverSocket.accept();
-                //Para leer lo que envie el cliente
-                BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                //para imprimir datos de salida                
-                PrintStream output = new PrintStream(clientSocket.getOutputStream());
-                //se lee peticion del cliente
-                String request = input.readLine();
-                System.out.println("Cliente> petición [" + request +  "]");
-                //se procesa la peticion y se espera resultado
-                String strOutput = process(request);                
-                //Se imprime en consola "servidor"
-                System.out.println("Servidor> Resultado de petición");                    
-                System.out.println("Servidor> \"" + strOutput + "\"");
-                //se imprime en cliente
-                output.flush();//vacia contenido
-                output.println(strOutput);                
-                //cierra conexion
-                clientSocket.close();
-            }    
+            ss = new ServerSocket(10578);
+            System.out.println("\t[OK]");
+            int idSession = 0;
+            while (true) {
+                Socket socket;
+                socket = ss.accept();
+                System.out.println("Nueva conexión entrante: "+socket);
+                ((ServidorHiloServer) new ServidorHiloServer(socket, idSession)).start();
+                idSession++;
+            }
         } catch (IOException ex) {
-            System.err.println(ex.getMessage());
+            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
+    
+    
+    
+    
+    
+    
+   
     /**
      * procesa peticion del cliente y retorna resultado
      * @param request peticion del cliente
